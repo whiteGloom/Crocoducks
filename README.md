@@ -16,4 +16,4 @@ Child crocoducks will follow their parents and will grow when you feed them
 
 The mod does not require any additional libraries except Forge
 
-This version supports Minecraft 1.20.* Versions
+This version supports Minecraft 1.20.* versions
