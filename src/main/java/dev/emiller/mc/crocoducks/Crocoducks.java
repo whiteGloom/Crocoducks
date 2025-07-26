@@ -3,34 +3,27 @@ package dev.emiller.mc.crocoducks;
 import com.mojang.logging.LogUtils;
 import dev.emiller.mc.crocoducks.client.model.CrocoduckModel;
 import dev.emiller.mc.crocoducks.client.render.CrocoduckModelLayers;
-import dev.emiller.mc.crocoducks.entity.CrocoduckEggEntity;
 import dev.emiller.mc.crocoducks.entity.CrocoduckEntity;
 import dev.emiller.mc.crocoducks.registries.CrocoduckEntityRenderers;
 import dev.emiller.mc.crocoducks.registries.CrocoducksEntities;
 import dev.emiller.mc.crocoducks.registries.CrocoducksItems;
 import dev.emiller.mc.crocoducks.registries.CrocoducksSoundEvents;
-import net.minecraft.Util;
-import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -41,18 +34,16 @@ public class Crocoducks {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public Crocoducks(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
-
+    public Crocoducks(IEventBus modEventBus, ModContainer ignoredModContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        CrocoducksEntities.register(context);
-        CrocoducksItems.register(context);
-        CrocoducksSoundEvents.register(context);
+        CrocoducksEntities.register(modEventBus);
+        CrocoducksItems.register(modEventBus);
+        CrocoducksSoundEvents.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -63,23 +54,10 @@ public class Crocoducks {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        DispenserBlock.registerBehavior(
-                CrocoducksItems.CROCODUCK_EGG.get(), new AbstractProjectileDispenseBehavior() {
-                    protected @NotNull Projectile getProjectile(
-                            @NotNull Level p_123476_,
-                            @NotNull Position p_123477_,
-                            @NotNull ItemStack p_123478_
-                    ) {
-                        return Util.make(
-                                new CrocoduckEggEntity(p_123476_, p_123477_.x(), p_123477_.y(), p_123477_.z()),
-                                (p_123474_) -> p_123474_.setItem(p_123478_)
-                        );
-                    }
-                }
-        );
+        DispenserBlock.registerProjectileBehavior(CrocoducksItems.CROCODUCK_EGG.get());
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = MODID)
     public static class ModEvents {
         @SubscribeEvent // on the mod event bus
         public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
@@ -99,12 +77,12 @@ public class Crocoducks {
 
         // You can use SubscribeEvent and let the Event Bus discover methods to call
         @SubscribeEvent
-        public static void onSpawnZonesRegistration(SpawnPlacementRegisterEvent event) {
+        public static void onSpawnZonesRegistration(RegisterSpawnPlacementsEvent event) {
             CrocoducksEntities.registerSpawnRules(event);
         }
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {

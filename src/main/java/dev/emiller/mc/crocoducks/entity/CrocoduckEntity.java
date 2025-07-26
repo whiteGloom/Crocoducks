@@ -4,6 +4,7 @@ import dev.emiller.mc.crocoducks.registries.CrocoducksEntities;
 import dev.emiller.mc.crocoducks.registries.CrocoducksItems;
 import dev.emiller.mc.crocoducks.registries.CrocoducksSoundEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -31,9 +32,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,10 +47,10 @@ public class CrocoduckEntity extends TamableAnimal implements NeutralMob {
             EntityDataSerializers.INT
     );
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
-    private static final Ingredient FOOD_ITEMS = Ingredient.of(ForgeRegistries.ITEMS.getValues()
-                                                                                    .stream()
-                                                                                    .filter(Item::isEdible)
-                                                                                    .toArray(Item[]::new));
+    private static final Ingredient FOOD_ITEMS = Ingredient.of(BuiltInRegistries.ITEM.stream()
+                                                                                     .filter(item -> new ItemStack(item).getFoodProperties(
+                                                                                             null) != null)
+                                                                                     .toArray(Item[]::new));
     public float flap;
     public float flapSpeed;
     public float oFlapSpeed;
@@ -63,7 +64,7 @@ public class CrocoduckEntity extends TamableAnimal implements NeutralMob {
 
     public CrocoduckEntity(EntityType<? extends CrocoduckEntity> entityType, Level level) {
         super(entityType, level);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     public static Boolean PREY_SELECTOR(LivingEntity entity, CrocoduckEntity crocoduck) {
@@ -111,7 +112,7 @@ public class CrocoduckEntity extends TamableAnimal implements NeutralMob {
         this.goalSelector.addGoal(2, new FloatGoal(this));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+        this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(6, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -221,19 +222,17 @@ public class CrocoduckEntity extends TamableAnimal implements NeutralMob {
         this.playSound(SoundEvents.CHICKEN_STEP, 0.15F, 1.0F);
     }
 
-    @Override
-    protected float getStandingEyeHeight(@NotNull Pose pose, @NotNull EntityDimensions dimensions) {
-        return this.isBaby() ? dimensions.height * 0.85F : dimensions.height * 0.98F;
-    }
-
     public boolean isFood(@NotNull ItemStack item) {
         return FOOD_ITEMS.test(item);
     }
 
-    public void setTame(boolean value) {
-        super.setTame(value);
+
+    @Override
+    protected void applyTamingSideEffects() {
+        super.applyTamingSideEffects();
+
         AttributeInstance maxHealthAttribute = this.getAttribute(Attributes.MAX_HEALTH);
-        if (value) {
+        if (isTame()) {
             if (maxHealthAttribute != null) {
                 maxHealthAttribute.setBaseValue(10.0F);
             }
@@ -281,11 +280,11 @@ public class CrocoduckEntity extends TamableAnimal implements NeutralMob {
         }
 
         @Nullable FoodProperties foodProperties = itemstack.getFoodProperties(this);
-        if (foodProperties == null || foodProperties.getNutrition() <= 0) {
+        if (foodProperties == null || foodProperties.nutrition() <= 0) {
             return InteractionResult.PASS;
         }
 
-        int nutrition = foodProperties.getNutrition();
+        int nutrition = foodProperties.nutrition();
 
         boolean wasUsed = false;
 
@@ -300,7 +299,7 @@ public class CrocoduckEntity extends TamableAnimal implements NeutralMob {
                 wasUsed = true;
             }
         } else if (!this.isAngry()) {
-            if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+            if (this.random.nextInt(3) == 0 && !EventHooks.onAnimalTame(this, player)) {
                 this.tame(player);
                 this.navigation.stop();
                 this.setTarget(null);
@@ -327,15 +326,9 @@ public class CrocoduckEntity extends TamableAnimal implements NeutralMob {
 
     }
 
-    public boolean canBeLeashed(@NotNull Player player) {
-        System.out.print("WGL CrocoduckEntity.canBeLeashed called");
-        return super.canBeLeashed(player);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_REMAINING_ANGER_TIME, 0); // ← стартовое значение
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_REMAINING_ANGER_TIME, 0);
     }
 
     public int getRemainingPersistentAngerTime() {

@@ -11,8 +11,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -99,8 +99,8 @@ public class CrocoduckModel extends EntityModel<CrocoduckEntity> {
         this.jaw.xRot = this.head.xRot;
 
         this.body.xRot = (float) Math.PI / 2;
-            this.rightWing.xRot = 0;
-            this.leftWing.xRot = 0;
+        this.rightWing.xRot = 0;
+        this.leftWing.xRot = 0;
 
         this.rightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
@@ -145,26 +145,23 @@ public class CrocoduckModel extends EntityModel<CrocoduckEntity> {
             @NotNull VertexConsumer buffer,
             int light,
             int overlay,
-            float r,
-            float g,
-            float b,
-            float a
+            int color
     ) {
         Runnable renderBody = () -> {
-            head.render(stack, buffer, light, overlay, r, g, b, a);
-            jaw.render(stack, buffer, light, overlay, r, g, b, a);
-            body.render(stack, buffer, light, overlay, r, g, b, a);
-            rightLeg.render(stack, buffer, light, overlay, r, g, b, a);
-            leftLeg.render(stack, buffer, light, overlay, r, g, b, a);
-            rightWing.render(stack, buffer, light, overlay, r, g, b, a);
-            leftWing.render(stack, buffer, light, overlay, r, g, b, a);
+            head.render(stack, buffer, light, overlay, color);
+            jaw.render(stack, buffer, light, overlay, color);
+            body.render(stack, buffer, light, overlay, color);
+            rightLeg.render(stack, buffer, light, overlay, color);
+            leftLeg.render(stack, buffer, light, overlay, color);
+            rightWing.render(stack, buffer, light, overlay, color);
+            leftWing.render(stack, buffer, light, overlay, color);
         };
 
         if (this.young) {
             stack.pushPose();
             stack.translate(0.0F, 5.0F / 16.0F, 2.0F / 16.0F);
-            head.render(stack, buffer, light, overlay, r, g, b, a);
-            jaw.render(stack, buffer, light, overlay, r, g, b, a);
+            head.render(stack, buffer, light, overlay, color);
+            jaw.render(stack, buffer, light, overlay, color);
             stack.popPose();
 
             stack.pushPose();
@@ -176,6 +173,5 @@ public class CrocoduckModel extends EntityModel<CrocoduckEntity> {
             renderBody.run();
         }
     }
-
 }
 

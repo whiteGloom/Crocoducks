@@ -3,24 +3,23 @@ package dev.emiller.mc.crocoducks.registries;
 import dev.emiller.mc.crocoducks.Crocoducks;
 import dev.emiller.mc.crocoducks.item.CrocoduckEggItem;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CrocoducksItems {
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Crocoducks.MODID);
-    public static final RegistryObject<Item> CROCODUCK_EGG = ITEMS.register(
+    private static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(Crocoducks.MODID);
+    public static final DeferredHolder<Item, CrocoduckEggItem> CROCODUCK_EGG = ITEMS.register(
             "crocoduck_egg",
-            () -> new CrocoduckEggItem(new Item.Properties().stacksTo(
-                    16))
+            () -> new CrocoduckEggItem(
+                    new Item.Properties().stacksTo(
+                            16))
     );
 
-    public static final RegistryObject<Item> CROCODUCK_SPAWN_EGG = ITEMS.register(
+    public static final DeferredHolder<Item, DeferredSpawnEggItem> CROCODUCK_SPAWN_EGG = ITEMS.register(
             "crocoduck_spawn_egg",
-            () -> new ForgeSpawnEggItem(
+            () -> new DeferredSpawnEggItem(
                     CrocoducksEntities.CROCODUCK,
                     0x3A5F3A,
                     0xA2C858,
@@ -28,8 +27,7 @@ public class CrocoducksItems {
             )
     );
 
-    public static void register(FMLJavaModLoadingContext context) {
-        IEventBus bus = context.getModEventBus();
+    public static void register(IEventBus bus) {
         ITEMS.register(bus);
     }
 }
