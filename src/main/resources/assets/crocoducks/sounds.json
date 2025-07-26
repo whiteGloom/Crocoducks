@@ -1,0 +1,73 @@
+{
+    "entities.crocoduck.ambient": {
+        "sounds": [
+            { "name": "crocoducks:entities/crocoduck/ambient/ambient1" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient2" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient3" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient4" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient5" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient6" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient7" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient8" },
+			{ "name": "crocoducks:entities/crocoduck/ambient/ambient9" }
+        ]
+    },
+    "entities.crocoduck.baby": {
+        "sounds": [
+            { "name": "crocoducks:entities/crocoduck/baby/baby1" },
+			{ "name": "crocoducks:entities/crocoduck/baby/baby2" },
+			{ "name": "crocoducks:entities/crocoduck/baby/baby3" },
+			{ "name": "crocoducks:entities/crocoduck/baby/baby4" },
+			{ "name": "crocoducks:entities/crocoduck/baby/baby5" },
+			{ "name": "crocoducks:entities/crocoduck/baby/baby6" },
+			{ "name": "crocoducks:entities/crocoduck/baby/baby7" },
+			{ "name": "crocoducks:entities/crocoduck/baby/baby8" }
+        ]
+    },
+    "entities.crocoduck.bite": {
+        "sounds": [
+            { "name": "crocoducks:entities/crocoduck/bite/bite1" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite2" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite3" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite4" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite5" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite6" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite7" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite8" },
+			{ "name": "crocoducks:entities/crocoduck/bite/bite9" }
+        ]
+    },
+    "entities.crocoduck.death": {
+        "sounds": [
+            { "name": "crocoducks:entities/crocoduck/death/death1" },
+			{ "name": "crocoducks:entities/crocoduck/death/death2" },
+			{ "name": "crocoducks:entities/crocoduck/death/death3" },
+			{ "name": "crocoducks:entities/crocoduck/death/death4" },
+			{ "name": "crocoducks:entities/crocoduck/death/death5" },
+			{ "name": "crocoducks:entities/crocoduck/death/death6" },
+			{ "name": "crocoducks:entities/crocoduck/death/death7" },
+			{ "name": "crocoducks:entities/crocoduck/death/death8" },
+			{ "name": "crocoducks:entities/crocoduck/death/death9" }
+        ]
+    },
+    "entities.crocoduck.hurt": {
+        "sounds": [
+            { "name": "crocoducks:entities/crocoduck/hurt/hurt1" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt2" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt3" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt4" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt5" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt6" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt7" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt8" },
+			{ "name": "crocoducks:entities/crocoduck/hurt/hurt9" }
+        ]
+    },
+    "entities.crocoduck.water": {
+        "sounds": [
+            { "name": "crocoducks:entities/crocoduck/water/water1" },
+			{ "name": "crocoducks:entities/crocoduck/water/water2" },
+			{ "name": "crocoducks:entities/crocoduck/water/water3" }
+        ]
+    }
+}
