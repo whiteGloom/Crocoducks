@@ -1,6 +1,6 @@
 # Crocoducks
 
-![Crocoducks](./src/main/resources/assets/crocoducks/logo.png)
+![Crocoducks](./additional/logo.png)
 
 The mod adds new mobs to Minecraft: crocoducks, a hybrid of crocodiles and ducks (actually chickens).
 
@@ -14,5 +14,5 @@ Child crocoducks will follow their parents and will grow when you feed them
 
 ## Installation
 
-The mod does not require any additional libraries except forge
+The mod does not require any additional libraries except Forge
 This version supports Minecraft 1.20.* Versions
