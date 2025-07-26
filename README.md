@@ -1,5 +1,7 @@
 # Crocoducks
 
+![Crocoducks](./src/main/resources/assets/crocoducks/logo.png)
+
 The mod adds new mobs to Minecraft: crocoducks, a hybrid of crocodiles and ducks (actually chickens).
 
 This mod is a port of the [same mod from 1.7.10 MC version](https://www.curseforge.com/minecraft/mc-mods/crocoducks)
